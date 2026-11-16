@@ -1,0 +1,58 @@
+
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+
+\usepackage[
+    backend=biber,
+    style=ieee,
+    sorting=none
+]{biblatex}
+
+\addbibresource{referencias/sanchez.bib}
+\addbibresource{referencias/loor.bib}
+\addbibresource{referencias/zambrano.bib}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\title{Computación paralela y análisis de RabbitMQ}
+\subtitle{GA-SUM-02 / EXP-1}
+\author{Sánchez \and Loor \and Zambrano}
+\institute{Universidad Técnica Estatal de Quevedo}
+\date{Noviembre de 2026}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Sánchez
+\input{secciones/01-fundamentos}
+\input{secciones/02-arquitectura}
+\input{secciones/03-transparencias}
+
+% Loor
+\input{secciones/04-cap-pacelc}
+\input{secciones/05-comunicacion}
+
+% Zambrano
+\input{secciones/06-fallos}
+\input{secciones/07-comparacion}
+\input{secciones/08-conclusiones}
+
+% Referencias
+\begin{frame}[allowframebreaks]{Referencias}
+    \printbibliography[heading=none]
+\end{frame}
+
+\end{document}

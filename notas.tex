@@ -1,0 +1,70 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{array}
+
+\usepackage[
+    backend=biber,
+    style=ieee,
+    sorting=none
+]{biblatex}
+
+\addbibresource{referencias/sanchez.bib}
+\addbibresource{referencias/loor.bib}
+\addbibresource{referencias/zambrano.bib}
+
+\title{Notas de la exposición\\
+Computación paralela y análisis de RabbitMQ}
+\author{Sánchez, Loor y Zambrano}
+\date{Noviembre de 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Desarrollo de la exposición}
+
+\input{notas/integrante1}
+\input{notas/integrante2}
+\input{notas/integrante3}
+
+\section*{Tabla de aportes}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}p{2cm}X X@{}}
+\toprule
+\textbf{Integrante} & \textbf{Responsabilidades} &
+\textbf{Evidencias de autoría} \\
+\midrule
+Sánchez & Fundamentos, arquitectura y transparencias. &
+Diagrama, diapositivas, notas y commits propios. \\
+
+Loor & Sincronía, asincronía, hilos, CAP/PACELC y comunicación. &
+Diagrama, diapositivas, notas y commits propios. \\
+
+Zambrano & Tolerancia a fallos, comparación y conclusiones. &
+Análisis de incidente, diapositivas, notas y commits propios. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{Declaración de uso de inteligencia artificial}
+
+
+\section*{Bosquejo inicial de arquitectura}
+
+
+\printbibliography
+
+\end{document}
