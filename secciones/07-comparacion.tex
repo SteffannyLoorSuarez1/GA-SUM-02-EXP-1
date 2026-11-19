@@ -1,0 +1,63 @@
+% ============================================================
+% 7. Comparación crítica: RabbitMQ y Apache Kafka (Zambrano)
+% ============================================================
+\section{Comparación con Apache Kafka}
+
+\begin{frame}{Dos formas de mover mensajes}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{RabbitMQ: cola}
+      \begin{itemize}
+        \item El broker empuja cada mensaje a un consumidor.
+        \item Cuando el trabajador confirma (\texttt{ack}), el mensaje se borra.
+        \item Un pedido lo procesa un solo trabajador.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Kafka: registro (log)}
+      \begin{itemize}
+        \item Los mensajes se guardan en particiones, en orden.
+        \item Cada consumidor lee a su ritmo y recuerda hasta dónde llegó (\textit{offset}).
+        \item Los mensajes se quedan un tiempo y se pueden volver a leer.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Comparación}
+  \small
+  \begin{tabularx}{\textwidth}{lXX}
+    \toprule
+    Criterio & RabbitMQ & Kafka \\
+    \midrule
+    Arquitectura & Exchanges que enrutan a colas & Temas divididos en particiones repartidas entre brokers \\
+    Comunicación & El broker entrega (push) & El consumidor pide (pull) \\
+    Procesamiento & Trabajadores que se reparten tareas & Grupos de consumidores que leen un flujo de eventos \\
+    Si falla un consumidor & Lo que no confirmó vuelve a la cola & Otro consumidor sigue desde el último offset guardado \\
+    Retención & Se borra al confirmar & Se guarda por tiempo o tamaño \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{Lo que dicen las mediciones}
+  \begin{itemize}
+    \item Ramadan et al.: RabbitMQ tuvo menor latencia por mensaje en casi todos los escenarios; con mensajes de 100 KB, unos 4,38 ms frente a 83,27 ms de Kafka. Kafka fue más estable con carga extrema y sostenida \cite{rias2026kafka}.
+    \item Kamiński et al.: el resultado depende del entorno. En .NET, Kafka logró hasta 38\,\% más rendimiento y 40\,\% menos latencia; en Spring Boot, RabbitMQ usó 29\,\% menos memoria y respondió 25\,\% más rápido \cite{kaminski2025rabbitmq}.
+  \end{itemize}
+  \vspace{0.3cm}
+  Ninguno gana siempre: depende de la carga y de la plataforma.
+\end{frame}
+
+\begin{frame}{Cuándo conviene cada uno}
+  \begin{tabularx}{\textwidth}{XX}
+    \toprule
+    RabbitMQ & Kafka \\
+    \midrule
+    Pedidos o tareas que un trabajador procesa una sola vez y confirma & Flujos de eventos que varios sistemas leen por separado \\
+    Notificaciones y correos & Auditoría y analítica, donde hace falta volver a leer el historial \\
+    Enrutamiento flexible entre colas & Volúmenes muy grandes y sostenidos \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.3cm}
+  {\small En Kodus el problema no fue elegir RabbitMQ, sino configurarlo mal: el clúster nunca se formó \cite{malinosqui2026kodus}.}
+\end{frame}
