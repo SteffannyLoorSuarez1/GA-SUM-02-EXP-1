@@ -47,3 +47,12 @@ Cada aviso se confirmaría con \texttt{ack} manual después de enviarlo, y usar�
 
 \paragraph{Conclusión.}
 Para el SGIRI elegiríamos RabbitMQ, porque lo que movemos son tareas puntuales y el volumen es moderado. Kafka lo pensaríamos si algún día quisiéramos analizar en tiempo real los datos de la red. Y al montarlo, lo primero que revisaríamos sería el clúster y el prefetch, que es justo donde falló Kodus. Gracias.
+
+\textbf{Zambrano.} Usé Claude (Anthropic) en mi parte de la exposición. Me
+ayudó a buscar artículos con DOI sobre RabbitMQ y Kafka y el post-mortem de
+Kodus, que leí y subrayé (capturas en \texttt{evidencias/articulos/}). Claude
+redactó la primera versión de las diapositivas de fallos y de comparación, y
+armó conmigo el diagrama de causas raíz de Kodus. Las conclusiones las
+respondí yo y Claude las pasó a diapositivas. El guion de mis notas lo escribí
+yo siguiendo mis diapositivas, y Claude le dio formato \LaTeX{} y agregó las
+citas. Revisé que las cifras coincidieran con las fuentes.
