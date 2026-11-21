@@ -1,0 +1,77 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="X9WzYT2pK48lMspw7DnF">
+    <mxGraphModel dx="524" dy="692" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-4" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-6" connectable="0" parent="J_RfpPGxZ2IzpMxD7Y15-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontSize,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" value="Solicitud" vertex="1">
+          <mxGeometry relative="1" x="-0.1226" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Cliente" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-5" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-8" connectable="0" parent="J_RfpPGxZ2IzpMxD7Y15-5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontSize,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" value="Llamada bloqueante" vertex="1">
+          <mxGeometry relative="1" x="-0.04" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Aplicación/servidor" vertex="1">
+          <mxGeometry height="60" width="120" x="435" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Procesar pedido" vertex="1">
+          <mxGeometry height="60" width="120" x="680" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;" value="El cliente recibe la respuesta solo cuando termina el procesamiento" vertex="1">
+          <mxGeometry height="30" width="290" x="150" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontStyle=1" value="Síncrono" vertex="1">
+          <mxGeometry height="30" width="60" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Times New Roman;fontStyle=1" value="Asíncrono" vertex="1">
+          <mxGeometry height="30" width="60" x="160" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-15" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Cliente" vertex="1">
+          <mxGeometry height="60" width="120" x="140" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-16" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Aplicación" vertex="1">
+          <mxGeometry height="60" width="120" x="315" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-20" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.662;entryY=1.074;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-21" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-22" edge="1" parent="1" source="J_RfpPGxZ2IzpMxD7Y15-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;labelPadding=0 4;fontFamily=Times New Roman;" target="J_RfpPGxZ2IzpMxD7Y15-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="RabbitMQ&lt;div&gt;cola de pedidos&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Consumidor 1: Pedido A" vertex="1">
+          <mxGeometry height="60" width="120" x="570" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Consumidor 3: Pedido A" vertex="1">
+          <mxGeometry height="60" width="120" x="670" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="J_RfpPGxZ2IzpMxD7Y15-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;fontFamily=Times New Roman;" value="Consumidor 2: Pedido B" vertex="1">
+          <mxGeometry height="60" width="120" x="590" y="525" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

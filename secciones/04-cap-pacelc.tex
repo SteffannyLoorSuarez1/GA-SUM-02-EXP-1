@@ -1,0 +1,45 @@
+
+\section{CAP y PACELC en RabbitMQ}
+
+\begin{frame}{CAP: consistencia, disponibilidad y particiones}
+  \small
+  \begin{itemize}
+    \item \textbf{Consistencia (C):} los usuarios reciben datos que respetan el mismo estado actualizado.
+    \item \textbf{Disponibilidad (A):} el sistema responde a las solicitudes que recibe.
+    \item \textbf{Tolerancia a particiones (P):} el sistema debe afrontar problemas de comunicación entre sus nodos.
+  \end{itemize}
+
+  \begin{block}{¿Dónde está el problema?}
+    Si los nodos dejan de comunicarse, el sistema puede tener que limitar algunas operaciones para mantener la consistencia, o seguir respondiendo con menos garantías.
+  \end{block}
+
+  {\tiny Fuentes: \cite{ahmed2023,myrhorodskyi2025}}
+\end{frame}
+
+\begin{frame}{PACELC: también importa el tiempo de respuesta}
+  \small
+  \begin{itemize}
+    \item \textbf{Si hay una partición:} se presenta el compromiso entre disponibilidad y consistencia.
+    \item \textbf{Si no hay una partición:} mantener las réplicas coordinadas puede aumentar el tiempo de respuesta.
+    \item Por eso, no basta con preguntar si un sistema sigue funcionando cuando ocurre un fallo.
+  \end{itemize}
+
+  \begin{block}{Relación con RabbitMQ}
+    Para analizar RabbitMQ debemos revisar cómo se almacenan y replican los mensajes, qué confirmaciones se utilizan y qué sucede cuando falla un nodo.
+  \end{block}
+
+  {\tiny Fuentes para CAP y PACELC: \cite{ahmed2023,myrhorodskyi2025}}
+\end{frame}
+
+\begin{frame}{Dos formas de procesar un pedido}
+  \centering
+
+  \includegraphics[
+    width=0.96\textwidth,
+    height=0.76\textheight,
+    keepaspectratio
+  ]{diagramas/procesamiento.png}
+
+  \vspace{0.1cm}
+  {\tiny Elaboración propia. Ejemplo de procesamiento síncrono y asíncrono con RabbitMQ.}
+\end{frame}
