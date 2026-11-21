@@ -1,0 +1,41 @@
+% ============================================================
+% 8. Conclusiones (Zambrano)
+% ============================================================
+\section{Conclusiones}
+
+\begin{frame}{Lo que le sirve del caso Kodus al SGIRI}
+  \begin{itemize}
+    \item Revisar que el clúster de RabbitMQ se forme de verdad (\texttt{rabbitmqctl cluster\_status}), no darlo por hecho.
+    \item Prefetch alto con \texttt{ack} al final llena la memoria del trabajador.
+    \item Los reintentos necesitan una salida, si no un aviso trabado frena la cola de todos.
+    \item Agregar trabajadores no arregla un error de configuración.
+    \item El monitoreo se monta antes de migrar, no después \cite{malinosqui2026kodus}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Si el SGIRI usara RabbitMQ para los avisos}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    Qué configurar & Para qué \\
+    \midrule
+    Cola \textit{quorum} durable & El aviso queda replicado y en disco \\
+    \textit{Publisher confirms} & El sistema sabe que el broker recibió el aviso \\
+    \texttt{ack} manual & Se confirma solo después de enviar la notificación \\
+    Cola de mensajes muertos & Tras 3 intentos fallidos el aviso sale de la cola y no se pierde \\
+    Prefetch bajo (5 a 10) & Cada notificación es corta, no hace falta acumular \\
+    Patrón \textit{outbox} & Incidencia y aviso se guardan juntos en PostgreSQL \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{0.2cm}
+  {\small Confirmaciones: \cite{rabbitmq2026confirms}}
+\end{frame}
+
+\begin{frame}{Conclusión: RabbitMQ o Kafka}
+  \begin{itemize}
+    \item RabbitMQ cuando cada mensaje es una tarea que se procesa, se confirma y se borra. Es el caso del SGIRI: incidencias, asignación de técnicos y avisos.
+    \item Kafka cuando hay un flujo grande y continuo de eventos que varios consumidores leen a su ritmo y que hay que guardar, por ejemplo la telemetría de los equipos de red.
+    \item Las mediciones no dan un ganador fijo, depende de la carga y la plataforma \cite{rias2026kafka,kaminski2025rabbitmq}.
+  \end{itemize}
+  \vspace{0.3cm}
+  Para el SGIRI elegiría RabbitMQ, bien configurado y monitoreado.
+\end{frame}
