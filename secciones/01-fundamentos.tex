@@ -1,0 +1,106 @@
+% ============================================================
+% 1. Fundamentos de la computación paralela (Sánchez)
+% ============================================================
+\section{Fundamentos de la computación paralela}
+
+\begin{frame}{¿Qué es la computación paralela?}
+  \begin{itemize}
+    \item Divide un problema en \textbf{subtareas} que se ejecutan
+          \textbf{al mismo tiempo} en varios procesadores o núcleos.
+    \item Objetivo: \textbf{reducir el tiempo de cómputo} y aprovechar mejor
+          los recursos.
+    \item Exige \textbf{coordinación} entre quienes ejecutan las subtareas.
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{columns}[T]
+    \begin{column}{0.31\textwidth}
+      \begin{block}{Memoria compartida}
+        \small Núcleos de un mismo equipo comparten la memoria.
+      \end{block}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{Memoria distribuida}
+        \small Cada nodo tiene su memoria y se comunica por mensajes.
+      \end{block}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{Híbrida}
+        \small Combina ambas, como en supercomputadoras y clústeres HPC.
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  {\tiny Fuente: \cite{dai2025parallel}, sec.~2.1.}
+\end{frame}
+
+\begin{frame}{Paralelismo, concurrencia y sistemas distribuidos}
+  \small
+  \begin{tabularx}{\textwidth}{@{}p{2.6cm}XX@{}}
+    \toprule
+    \textbf{Concepto} & \textbf{Idea central} & \textbf{En una tienda en línea} \\
+    \midrule
+    Concurrencia &
+      Varias tareas avanzan en un mismo período; pueden alternarse
+      \cite{reinders2023}. &
+      Un servidor atiende varios pedidos intercalando su ejecución. \\
+    Paralelismo &
+      Varias tareas se ejecutan en el mismo instante en recursos distintos
+      \cite{reinders2023,dai2025parallel}. &
+      Tres trabajadores procesan tres pedidos a la vez. \\
+    \raggedright Sistema distribuido &
+      Elementos autónomos que se comunican por red y se perciben como un
+      solo sistema \cite{vansteen2023distributed}. &
+      Tienda, broker y trabajadores en máquinas distintas. \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.3cm}
+  \begin{block}{Relación}
+    Se complementan: un sistema distribuido puede ejecutar en paralelo dentro
+    de cada nodo; el paralelo prioriza velocidad y el distribuido,
+    escalabilidad y tolerancia a fallos \cite{dai2025parallel}.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Ejemplo: varios trabajadores procesando pedidos}
+  \begin{columns}[T]
+    \begin{column}{0.47\textwidth}
+      \textbf{Un trabajador (secuencial)}\\[0.15cm]
+      \small
+      \begin{tabular}{@{}ll@{}}
+        \toprule
+        Turno & Pedido \\
+        \midrule
+        1 a 6 & P1 $\rightarrow$ P2 $\rightarrow$ \dots $\rightarrow$ P6 \\
+        \bottomrule
+      \end{tabular}\\[0.15cm]
+      Total: \textbf{6 turnos}.
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Tres trabajadores (paralelo)}\\[0.15cm]
+      \small
+      \begin{tabular}{@{}lll@{}}
+        \toprule
+        Trabajador & Turno 1 & Turno 2 \\
+        \midrule
+        T1 & P1 & P4 \\
+        T2 & P2 & P5 \\
+        T3 & P3 & P6 \\
+        \bottomrule
+      \end{tabular}\\[0.15cm]
+      Total: \textbf{2 turnos}.
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  \begin{block}{En RabbitMQ}
+    Los trabajadores son consumidores de una \textbf{misma cola}: el broker
+    reparte los mensajes entre ellos y entrega cada pedido a un solo
+    trabajador a la vez \cite{rabbitmq2026amqp}.
+  \end{block}
+
+  {\tiny Ejemplo ilustrativo: supone pedidos independientes y de igual
+  duración; no considera el costo de coordinación.}
+\end{frame}
