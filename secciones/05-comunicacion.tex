@@ -1,16 +1,17 @@
 
 \section{Modelos de comunicación}
 
-\begin{frame}{Comunicación entre procesos}
-  \begin{itemize}
-    \item Los procesos pueden intercambiar información para coordinar tareas dentro de un sistema distribuido \cite{kazanavicius2023}.
-    \item \textbf{Emisor:} es aquel proceso que envía información.
-    \item \textbf{Receptor:} es el proceso que recibe la información.
-    \item \textbf{Mensaje:} información transmitida entre procesos.
-    \item La comunicación puede ser \textbf{síncrona} o \textbf{asíncrona} \cite{kazanavicius2023}.
-  \end{itemize}
+\begin{frame}{Comunicación síncrona y asíncrona}
+ \begin{itemize}
+  \item Los procesos intercambian información
+  para coordinar tareas en un sistema distribuido
+  \cite{kazanavicius2023}.
+  \item La comunicación puede ser
+  \textbf{síncrona} o \textbf{asíncrona}
+  \cite{kazanavicius2023}.
+\end{itemize}
 
-  {\tiny Fuentes: \cite{kazanavicius2023,zhang2023}}
+  {\tiny Fuente: \cite{kazanavicius2023}}
 \end{frame}
 
 \begin{frame}{Comunicación síncrona}
@@ -69,7 +70,9 @@
 
   \vspace{0.3cm}
   \begin{block}{Ejemplo}
-    Tres trabajadores procesan pedidos diferentes. Si alternan su ejecución, existe concurrencia; si trabajan al mismo tiempo, existe paralelismo.
+  Tres trabajadores procesan pedidos diferentes.
+  Si alternan su ejecución, existe concurrencia;
+  si trabajan simultáneamente, existe paralelismo.
   \end{block}
 
   {\tiny Fuente: \cite{reinders2023}, cap. 1, pp. 28--29.}
@@ -106,4 +109,49 @@
   \end{block}
 
   {\tiny Fuentes: \cite{maharjan2023,kazanavicius2023,derlatka2023}}
+\end{frame}
+
+\begin{frame}{Aplicación al PFC: SREI}
+\footnotesize
+
+\begin{itemize}
+    \setlength{\itemsep}{0.08cm}
+
+    \item \textbf{Sistema:}
+    Registro de Eventos Interculturales (SREI).
+
+    \item \textbf{Servicio proveedor:}
+    \texttt{servicio-eventos} (puerto 8080).
+    Proporciona información de un evento intercultural.
+
+    \item \textbf{Servicio consumidor:}
+    \texttt{servicio-consulta} (puerto 8081).
+    Solicita la información al proveedor y utiliza
+    los datos recibidos para responder a la consulta.
+\end{itemize}
+
+\vspace{0.1cm}
+
+\begin{block}{Implementación REST en Spring Boot}
+\textbf{Proveedor (EventoController):}
+
+\texttt{\detokenize{@GetMapping("/consulta")}}
+
+\vspace{0.08cm}
+
+\textbf{Consumidor (ConsultaController):}
+
+\texttt{\detokenize{cliente.get().uri("/api/eventos/consulta")}}
+
+\texttt{\detokenize{.retrieve().body(Map.class);}}
+\end{block}
+
+\vspace{0.1cm}
+
+\begin{block}{Relación con la teoría}
+El consumidor solicita información mediante HTTP
+y espera la respuesta del proveedor para utilizarla.
+Esto representa comunicación síncrona mediante REST.
+\end{block}
+
 \end{frame}
