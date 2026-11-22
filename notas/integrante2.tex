@@ -1,0 +1,96 @@
+% GA-SUM-02 / EXP-1 — Notas del integrante 2 (Steffanny Loor)
+% Guion oral aproximado: 4 minutos.
+% Citas selectivas a fuentes técnicas; bibliografía compartida en referencias/loor.bib.
+
+\section*{Guion de exposición — Steffanny Loor (4 minutos): comunicación y procesamiento paralelo}
+
+\subsection*{Diapositiva 1. CAP: consistencia, disponibilidad y particiones (30 s)}
+CAP nos ayuda a entender qué ocurre cuando se interrumpe la comunicación entre nodos.
+Consistencia significa que las lecturas reflejan el estado más reciente;
+la disponibilidad, que las solicitudes reciben una respuesta válida;
+y tolerancia a particiones, que debemos considerar fallos de red.
+ En una quorum queue de RabbitMQ con tres miembros se necesita una mayoría de dos.
+ Si uno queda aislado, los otros dos pueden continuar, pero el miembro aislado no puede confirmar publicaciones p
+ or su cuenta \cite{ahmed2023,myrhorodskyi2025,rabbitmq2026quorum}.
+
+\subsection*{Diapositiva 2. PACELC (23 s)}
+PACELC amplía este análisis.
+Durante una partición, debemos considerar el compromiso entre
+consistencia y disponibilidad. Incluso cuando la red funciona,
+coordinar réplicas puede hacer que aumente la latencia.
+En RabbitMQ, las quorum queues utilizan consenso y necesitan una mayoría.
+ Por eso, no sería correcto clasificar a todo RabbitMQ de una sola manera:
+ depende del tipo de cola y su configuración \cite{ahmed2023,myrhorodskyi2025,rabbitmq2026quorum}.
+
+\subsection*{Diapositiva 3. Diagrama: dos formas de procesar un pedido (25 s)}
+Este diagrama compara dos situaciones.
+ En la primera, la aplicación espera que termine una
+ operación antes de continuar. En la segunda, publica el
+ pedido en una cola de RabbitMQ y puede seguir atendiendo s
+ solicitudes. Varios consumidores comparten la cola y
+ procesan pedidos diferentes. Esto permite distribuir el
+ trabajo: si varios consumidores se ejecutan simultáneamente,
+ los pedidos pueden procesarse en paralelo \cite{maharjan2023,derlatka2023,reinders2023}.
+
+\subsection*{Diapositiva 4. Comunicación síncrona y asíncrona (12 s)}
+La comunicación síncrona espera una respuesta para continuar;
+la asíncrona permite avanzar sin esperar el procesamiento
+del mensaje \cite{kazanavicius2023}.
+
+\subsection*{Diapositiva 5. Comunicación síncrona (18 s)}
+Una tienda necesita conocer si el pago fue aprobado antes de
+confirmar la compra. La comunicación síncrona permite tomar
+esa decisión, aunque puede introducir demoras \cite{kazanavicius2023}.
+
+\subsection*{Diapositiva 6. Comunicación asíncrona (18 s)}
+En la comunicación asíncrona, el emisor envía un mensaje y
+no tiene que esperar a que el receptor termine de procesarlo.
+Las colas almacenan mensajes pendientes y permiten que los componentes
+trabajen en momentos diferentes.
+Eso reduce su dependencia temporal, aunque requiere gestionar
+los mensajes \cite{maharjan2023,derlatka2023}.
+
+\subsection*{Diapositiva 7. Comparación (15 s)}
+La diferencia principal es la espera. La comunicación síncrona
+conviene cuando necesitamos una respuesta para decidir qué hacer.
+La asíncrona conviene cuando una tarea puede quedar pendiente mientras
+la aplicación continúa. Ninguna es mejor en todos los escenarios,
+además, ser asíncrono no significa automáticamente ejecutar tareas en paralelo.
+
+\subsection*{Diapositiva 8. Hilos, concurrencia y paralelismo (22 s)}
+Un hilo es una unidad de ejecución dentro de un proceso. Hay
+concurrencia cuando varias tareas progresan durante un mismo
+período, aunque se alternen. Hay paralelismo cuando realmente
+se ejecutan al mismo tiempo. Pensemos en tres trabajadores:
+si se turnan, hay concurrencia; si trabajan simultáneamente,
+hay paralelismo. En RabbitMQ, varios consumidores pueden recibir pedidos distintos;
+solo existe paralelismo si los procesan al mismo tiempo. Tener varios consumidores no
+lo garantiza por sí solo \cite{reinders2023}.
+
+\subsection*{Diapositiva 9. Modelos de comunicación (20 s)}
+En cliente-servidor, un proceso solicita un servicio y otro
+lo atiende. En mensajería, los procesos intercambian mensajes,
+a veces mediante un intermediario. En RPC, un proceso solicita
+ejecutar una operación en otro. RabbitMQ funciona como intermediario
+entre productores y consumidores y también permite construir patrones de petición
+y respuesta \cite{zhang2023,kazanavicius2023}.
+
+\subsection*{Diapositiva 10. Procesamiento asíncrono con RabbitMQ (18 s)}
+En nuestro ejemplo, un cliente realiza un pedido,
+la aplicación publica un mensaje y RabbitMQ lo dirige a una
+cola. Después, uno de los consumidores recibe y procesa ese pedido.
+Otros consumidores pueden atender pedidos distintos. Así, la aplicación
+no espera a que cada trabajador termine. Si hay recursos para ejecutar
+varios consumidores simultáneamente, diferentes pedidos pueden procesarse en
+paralelo \cite{maharjan2023,derlatka2023}.
+
+\subsection*{Diapositiva 11. Aplicación al PFC: SREI (27 s)}
+En mi de fin de curso, SREI, en mi grupo tenemos dos servicios independientes
+con Spring Boot. El servicio de eventos proporciona información y el
+servicio de consulta la solicita mediante REST.
+Elegimos comunicación síncrona para esta interacción porque el
+consumidor necesita recibir los datos antes de responder a la consulta.
+A diferencia del ejemplo de RabbitMQ, aquí no estamos distribuyendo trabajos
+pendientes entre consumidores, sino obteniendo una respuesta directa.
+
+\textbf{Fuentes utilizadas:} \cite{ahmed2023,myrhorodskyi2025,rabbitmq2026quorum,kazanavicius2023,maharjan2023,derlatka2023,reinders2023,zhang2023}.

@@ -1,0 +1,16 @@
+% ============================================================
+% Notas de Angel Zambrano: apartados 6, 7 y 8
+% ============================================================
+\subsection*{Angel Zambrano: fallos, comparación con Kafka y conclusiones}
+
+\paragraph{Tolerancia a fallos.}
+Si un trabajador toma un pedido y se cae a mitad del proceso, lo que pase depende de cuándo confirmó. Si espera a terminar para confirmar, RabbitMQ ve que la conexión se cortó y le pasa el pedido a otro trabajador. Para esto usa el \texttt{ack} y \texttt{nack} manual, el prefetch y los \textit{publisher confirms}.
+
+\paragraph{Incidente real: Kodus.}
+El 4 de enero Kodus pasó de un solo servidor a tres servicios conectados con RabbitMQ, y recién el 23 de enero dieron con la causa, cuando ya tenían unos 900 \textit{pull requests} en cola. El problema principal fue que RabbitMQ nunca funcionó como clúster por un error en Terraform. Encima el prefetch estaba en 60 y los reintentos por el límite de la API de GitHub dejaban jobs trabados. Corrigieron Terraform, los 900 pedidos salieron en minutos y bajaron el prefetch a 20. Meter más workers no les iba a servir, porque el problema estaba en la configuración \cite{malinosqui2026kodus}.
+
+\paragraph{Comparación con Kafka.}
+RabbitMQ funciona como una cola: el mensaje se procesa, se confirma y se borra. Kafka es un registro donde los mensajes quedan guardados y cada consumidor sabe hasta dónde leyó. En Ramadan y otros, RabbitMQ tuvo 4,38 ms contra 83,27 de Kafka con mensajes de 100 KB \cite{rias2026kafka}. En Kamiński, el resultado cambió según la plataforma \cite{kaminski2025rabbitmq}.
+
+\paragraph{Conclusiones.}
+Para el SGIRI elegiríamos RabbitMQ, porque lo que movemos son tareas puntuales y el volumen es moderado. Cada aviso se confirmaría con \texttt{ack} manual, el prefetch iría bajo y el que falle varias veces se iría a una cola aparte. Del caso Kodus nos quedamos con revisar que el clúster de verdad esté unido y que los reintentos fallen rápido.
