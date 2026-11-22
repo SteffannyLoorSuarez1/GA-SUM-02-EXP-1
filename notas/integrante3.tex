@@ -3,48 +3,14 @@
 % ============================================================
 \subsection*{Angel Zambrano: fallos, comparación con Kafka y conclusiones}
 
-\subsubsection*{Tolerancia a fallos}
-
-\paragraph{Riesgos de la concurrencia.}
-Cuando varios trabajadores atienden al mismo tiempo ganamos velocidad, pero aparecen riesgos. Una condición de carrera pasa cuando dos procesos tocan el mismo dato y el resultado depende de quién llega primero. Un bloqueo, cuando un proceso se queda esperando algo que nunca se libera. Y está la coordinación: que todos trabajen parejo sin pisarse.
-
-\paragraph{Un trabajador falla con el pedido en la mano.}
-Si un trabajador toma un pedido y se cae a mitad del proceso, lo que pase depende de cuándo confirmó. Si confirmó al recibirlo, el pedido se pierde. Si espera a terminar para confirmar, RabbitMQ ve que la conexión se cortó y le pasa el pedido a otro trabajador.
-
-\paragraph{Mecanismos de RabbitMQ.}
-RabbitMQ tiene cuatro mecanismos para esto. Con el \texttt{ack} manual el trabajador confirma que terminó, y con el \texttt{nack} avisa que falló para que se reintente o se descarte. El prefetch pone un tope a cuántos mensajes puede tener un trabajador sin confirmar. Los \textit{publisher confirms} le avisan al productor que el broker recibió el mensaje.
+\paragraph{Tolerancia a fallos.}
+Si un trabajador toma un pedido y se cae a mitad del proceso, lo que pase depende de cuándo confirmó. Si espera a terminar para confirmar, RabbitMQ ve que la conexión se cortó y le pasa el pedido a otro trabajador. Para esto usa el \texttt{ack} y \texttt{nack} manual, el prefetch y los \textit{publisher confirms}.
 
 \paragraph{Incidente real: Kodus.}
-Kodus es una empresa que revisa código con IA. El 4 de enero terminaron de pasar de un solo servidor a tres servicios conectados con RabbitMQ, y al principio todo parecía andar bien. Las revisiones se fueron poniendo lentas, y recién el 23 de enero dieron con la causa, cuando ya tenían unos 900 \textit{pull requests} en cola \cite{malinosqui2026kodus}.
+El 4 de enero Kodus pasó de un solo servidor a tres servicios conectados con RabbitMQ, y recién el 23 de enero dieron con la causa, cuando ya tenían unos 900 \textit{pull requests} en cola. El problema principal fue que RabbitMQ nunca funcionó como clúster por un error en Terraform. Encima el prefetch estaba en 60 y los reintentos por el límite de la API de GitHub dejaban jobs trabados. Corrigieron Terraform, los 900 pedidos salieron en minutos y bajaron el prefetch a 20. Meter más workers no les iba a servir, porque el problema estaba en la configuración \cite{malinosqui2026kodus}.
 
-\paragraph{Causas raíz.}
-El problema principal fue que RabbitMQ nunca funcionó como clúster. Por un error en Terraform, los tres nodos trabajaban cada uno por su lado. Encima el prefetch estaba en 60, así que cada worker cargaba demasiadas revisiones en memoria, y los reintentos por el límite de la API de GitHub dejaban jobs trabados que frenaban a todos.
+\paragraph{Comparación con Kafka.}
+RabbitMQ funciona como una cola: el mensaje se procesa, se confirma y se borra. Kafka es un registro donde los mensajes quedan guardados y cada consumidor sabe hasta dónde leyó. En Ramadan y otros, RabbitMQ tuvo 4,38 ms contra 83,27 de Kafka con mensajes de 100 KB \cite{rias2026kafka}. En Kamiński, el resultado cambió según la plataforma \cite{kaminski2025rabbitmq}.
 
-\paragraph{Cómo lo resolvieron.}
-Corrigieron Terraform, los nodos por fin formaron el clúster y los 900 pedidos salieron en minutos. Después bajaron el prefetch a 20 y arreglaron los errores que dejaban jobs atascados. Ellos mismos reconocieron que meter más workers no les iba a servir, porque el problema estaba en la configuración \cite{malinosqui2026kodus}.
-
-\subsubsection*{Comparación con Apache Kafka}
-
-\paragraph{Dos formas de mover mensajes.}
-RabbitMQ funciona como una cola: el mensaje se procesa, se confirma y se borra. Kafka es más bien un registro donde los mensajes quedan guardados en orden, y cada consumidor sabe hasta dónde leyó.
-
-\paragraph{Comparación.}
-En RabbitMQ el broker le empuja los mensajes al consumidor, mientras que en Kafka el consumidor los va pidiendo. Si un consumidor se cae, RabbitMQ vuelve a encolar lo que no se confirmó, y en Kafka el consumidor retoma desde la última posición que guardó. Y en retención, RabbitMQ borra al confirmar y Kafka guarda los mensajes el tiempo que se configure.
-
-\paragraph{Lo que dicen las mediciones.}
-En el estudio de Ramadan y otros autores, RabbitMQ tuvo menos latencia en casi todas las pruebas, por ejemplo 4,38 milisegundos contra 83,27 con mensajes de 100 KB \cite{rias2026kafka}. En el de Kamiński, el resultado cambió según la plataforma donde lo corrieron \cite{kaminski2025rabbitmq}.
-
-\paragraph{Cuándo conviene cada uno.}
-RabbitMQ sirve para tareas que se hacen una sola vez, como mandar un aviso o procesar un pedido. Si en cambio hay un flujo grande de eventos que varios sistemas tienen que leer, o revisar más tarde, ahí conviene Kafka.
-
-\subsubsection*{Conclusiones}
-
-\paragraph{Lo que le sirve del caso Kodus al SGIRI.}
-Para nuestro sistema de incidencias nos quedamos con dos cosas. Si montamos un clúster, hay que revisar que de verdad esté unido. Y los reintentos tienen que fallar rápido, para que un aviso trabado no detenga a los demás.
-
-\paragraph{Si el SGIRI usara RabbitMQ para los avisos.}
-Cada aviso se confirmaría con \texttt{ack} manual después de enviarlo, y usaríamos \textit{publisher confirms} al publicarlo. El prefetch iría bajo porque los avisos son cortos, y el que falle varias veces se iría a una cola aparte para revisarlo a mano.
-
-\paragraph{Conclusión.}
-Para el SGIRI elegiríamos RabbitMQ, porque lo que movemos son tareas puntuales y el volumen es moderado. Kafka lo pensaríamos si algún día quisiéramos analizar en tiempo real los datos de la red. Y al montarlo, lo primero que revisaríamos sería el clúster y el prefetch, que es justo donde falló Kodus. Gracias.
-
+\paragraph{Conclusiones.}
+Para el SGIRI elegiríamos RabbitMQ, porque lo que movemos son tareas puntuales y el volumen es moderado. Cada aviso se confirmaría con \texttt{ack} manual, el prefetch iría bajo y el que falle varias veces se iría a una cola aparte. Del caso Kodus nos quedamos con revisar que el clúster de verdad esté unido y que los reintentos fallen rápido.
