@@ -1,0 +1,59 @@
+% ============================================================
+% 3. Transparencias de distribución en RabbitMQ (Sánchez)
+% ============================================================
+\section{Transparencias de distribución}
+
+\begin{frame}{Transparencias presentes en la arquitectura}
+  \small
+  \begin{tabularx}{\textwidth}{@{}p{2.5cm}p{3.5cm}X@{}}
+    \toprule
+    \textbf{Transparencia} & \textbf{Qué oculta} & \textbf{Ejemplo en el diagrama} \\
+    \midrule
+    Acceso & \raggedright Diferencias en cómo se representan y acceden los
+      recursos. &
+      La tienda y los trabajadores solo comparten el protocolo AMQP, no su
+      implementación \cite{rabbitmq2026connections}. \\
+    Ubicación & \raggedright Dónde está el recurso. &
+      La tienda publica en el \textit{exchange} \texttt{pedidos} por su
+      nombre; no sabe qué trabajador ni qué nodo atiende el pedido
+      \cite{rabbitmq2026amqp,rabbitmq2026clustering}. \\
+    Replicación & \raggedright Que existen varias copias. &
+      \texttt{procesar\_pedidos} tiene réplicas en los 3 nodos, pero se usa
+      como una sola cola \cite{rabbitmq2026quorum}. \\
+    Concurrencia & \raggedright Que otros comparten el recurso. &
+      Los tres trabajadores consumen de la misma cola sin coordinarse entre
+      sí \cite{rabbitmq2026amqp}. \\
+    Fallos & \raggedright El fallo y la recuperación. &
+      Si el trabajador 3 cae sin \texttt{ack}, su pedido pasa a otro; si cae
+      el nodo líder de la cola, se elige otro
+      \cite{rabbitmq2026queues,rabbitmq2026quorum}. \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.2cm}
+  {\tiny Tipos de transparencia: \cite{vansteen2023distributed}.}
+\end{frame}
+
+\begin{frame}{Limitaciones de esas transparencias}
+  \begin{itemize}
+    \item \textbf{Fallos:} el pedido reentregado llega marcado como
+          \texttt{redelivered} y puede cambiar el orden; si el trabajador
+          alcanzó a procesarlo, se procesaría dos veces
+          \cite{rabbitmq2026queues,fu2021fair}.
+    \item \textbf{Ubicación:} si cae el nodo al que está conectada la
+          tienda, esta debe reconectarse a otro nodo
+          \cite{rabbitmq2026clustering}.
+    \item \textbf{Replicación:} por defecto, una cola vive en un solo nodo;
+          la de quórum necesita mayoría, así que con 3 nodos tolera 1 fallo
+          \cite{rabbitmq2026clustering,rabbitmq2026quorum}.
+    \item \textbf{Latencia:} la tienda no sabe cuándo se procesará el
+          pedido, y la demora de la red no se puede ocultar
+          \cite{vansteen2023distributed}.
+  \end{itemize}
+
+  \begin{block}{Conclusión}
+    La transparencia total no es alcanzable y tiene un costo en rendimiento
+    \cite{vansteen2023distributed}. RabbitMQ oculta la distribución en el
+    caso normal, pero ante fallos y latencia la aplicación debe intervenir.
+  \end{block}
+\end{frame}
