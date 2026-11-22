@@ -9,6 +9,8 @@
 **Integrantes:** LOOR SUAREZ STEFFANNY DEL ROCIO, SANCHEZ VERA DARWIN JOEL y ZAMBRANO YONG ANGEL DANIEL
 **Fecha:** 21 de Noviembre de 2026
 
+LINK DEL VIDEO: https://drive.google.com/drive/folders/19zjzoN_4WMlsvBQsWxvj4CusjlUrZKGT?usp=drive_link
+
 ## Objetivo
 
 Explicar los fundamentos de la computación paralela y analizar
