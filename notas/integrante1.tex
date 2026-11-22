@@ -3,7 +3,7 @@
 % ============================================================
 \subsection*{Darwin Sánchez: fundamentos, arquitectura y transparencias}
 
-Mi parte abre la exposición con nueve diapositivas en cuatro minutos. Uso
+Mi parte abre la exposición con diez diapositivas en cuatro minutos. Uso
 como ejemplo una tienda en línea que publica sus pedidos en RabbitMQ para que
 varios trabajadores los procesen; es el mismo tipo de ejemplo de pedidos que
 aparece en los apartados de comunicación y de fallos.
@@ -17,15 +17,16 @@ aparece en los apartados de comunicación y de fallos.
 \toprule
 \textbf{N.\textsuperscript{o}} & \textbf{Diapositiva} & \textbf{Tiempo} \\
 \midrule
-1 & ¿Qué es la computación paralela? & 0:25 \\
-2 & Paralelismo, concurrencia y sistemas distribuidos & 0:30 \\
+1 & ¿Qué es la computación paralela? & 0:20 \\
+2 & Paralelismo, concurrencia y sistemas distribuidos & 0:25 \\
 3 & Ejemplo: varios trabajadores procesando pedidos & 0:25 \\
-4 & RabbitMQ: qué es y qué problema resuelve & 0:25 \\
-5 & Usuarios, aplicaciones y escenarios de uso & 0:20 \\
-6 & Componentes de la arquitectura & 0:25 \\
-7 & Diagrama propio: recorrido de un pedido & 0:40 \\
-8 & Transparencias presentes en la arquitectura & 0:30 \\
-9 & Limitaciones de esas transparencias & 0:20 \\
+4 & Ejemplo: pedidos de distinta duración & 0:30 \\
+5 & RabbitMQ: qué es y qué problema resuelve & 0:25 \\
+6 & Usuarios, aplicaciones y escenarios de uso & 0:15 \\
+7 & Componentes de la arquitectura & 0:20 \\
+8 & Diagrama propio: recorrido de un pedido & 0:35 \\
+9 & Transparencias presentes en la arquitectura & 0:25 \\
+10 & Limitaciones de esas transparencias & 0:20 \\
 \midrule
  & \textbf{Total} & \textbf{4:00} \\
 \bottomrule
@@ -74,16 +75,39 @@ P4, P5 y P6 en el segundo. Es un caso ideal, porque la coordinación y la
 comunicación también consumen tiempo. En RabbitMQ los trabajadores son
 consumidores de una misma cola y el broker reparte los mensajes entre ellos
 \cite{rabbitmq2026amqp}. Esta misma situación aparece en el diagrama de la
-diapositiva 7.
+diapositiva 8.
 
 \textit{Guion:} ``Con seis pedidos, un solo trabajador necesita seis turnos.
 Con tres trabajadores, cada uno toma un pedido distinto y terminamos en dos.
 Es un caso ideal, porque coordinar también cuesta. En RabbitMQ esto se logra
 conectando varios consumidores a la misma cola.''
 
+\paragraph{Diapositiva 4. Ejemplo: pedidos de distinta duración.}
+En la práctica los pedidos no duran lo mismo. Con duraciones supuestas de
+4 minutos para P1 y P4 y de 1 minuto para los demás, el trabajo total es de
+12 minutos, de modo que con tres trabajadores el mínimo posible sería 4.
+Por defecto, RabbitMQ envía cada mensaje al siguiente consumidor por turnos y
+no tiene en cuenta los mensajes que cada uno aún no ha confirmado
+\cite{rabbitmq2026workqueues}. Así, el trabajador 1 recibe P1 y P4 y está
+ocupado 8 minutos, mientras los otros dos terminan a los 2. Con
+\texttt{prefetch} = 1, el broker no entrega un nuevo mensaje a un trabajador
+hasta que este confirma el anterior \cite{rabbitmq2026workqueues}: cada
+pedido va al primer trabajador que queda libre y todo termina en 5 minutos.
+No se llega a 4 porque el broker no sabe cuánto tardará cada pedido. El
+\texttt{prefetch} vuelve a aparecer en el caso Kodus, en el apartado de
+fallos.
+
+\textit{Guion:} ``Ahora un caso más real: los pedidos no duran lo mismo. P1 y
+P4 tardan cuatro minutos y el resto uno. Si RabbitMQ reparte por turnos, al
+trabajador 1 le tocan los dos pedidos grandes y terminamos en ocho minutos,
+aunque los otros dos ya están libres. Con prefetch igual a uno, cada
+trabajador recibe otro pedido solo después de confirmar el anterior, y
+terminamos en cinco. Tener más trabajadores ayuda, pero también importa cómo
+se reparte el trabajo.''
+
 \subsubsection*{Apartado 2. Arquitectura de RabbitMQ}
 
-\paragraph{Diapositiva 4. RabbitMQ: qué es y qué problema resuelve.}
+\paragraph{Diapositiva 5. RabbitMQ: qué es y qué problema resuelve.}
 RabbitMQ es un broker de mensajería de código abierto \cite{rabbitmq2026home}:
 recibe los mensajes de los productores y los entrega a los consumidores
 \cite{rabbitmq2026amqp}. Implementa AMQP 0-9-1 y AMQP 1.0, y también admite
@@ -98,7 +122,7 @@ responde sin esperar a que se procese; no necesita conocer a quién lo
 procesa; y si llegan muchos pedidos a la vez, esperan en la cola hasta que un
 trabajador esté libre.''
 
-\paragraph{Diapositiva 5. Usuarios, aplicaciones y escenarios de uso.}
+\paragraph{Diapositiva 6. Usuarios, aplicaciones y escenarios de uso.}
 Dyjach y Plechawska-Wójcik ubican a RabbitMQ, junto con Kafka y Pulsar, entre
 los tres brokers principales para aplicaciones web \cite{dyjach2024brokers}.
 Los equipos de operación lo administran desde su interfaz web
@@ -109,13 +133,12 @@ de fallos \cite{malinosqui2026kodus}. Los escenarios dependen del tipo de
 \textit{topic} enrutan por clave y \textit{fanout} copia el mensaje a todas
 las colas vinculadas \cite{rabbitmq2026amqp}.
 
-\textit{Guion:} ``Lo usan sobre todo equipos que desarrollan aplicaciones
-web; un estudio lo ubica entre los tres brokers principales, junto con Kafka
-y Pulsar. Un caso real es Kodus, cuyo incidente veremos más adelante. En la
-tienda lo usamos de dos formas: como cola de trabajo y para enrutar el mismo
-pedido a dos colas.''
+\textit{Guion:} ``Lo usan sobre todo equipos de aplicaciones web: un
+estudio lo ubica entre los tres brokers principales, con Kafka y Pulsar.
+Kodus es un caso real que veremos más adelante. En la tienda lo usamos como
+cola de trabajo y para enviar el pedido a dos colas.''
 
-\paragraph{Diapositiva 6. Componentes de la arquitectura.}
+\paragraph{Diapositiva 7. Componentes de la arquitectura.}
 El productor nunca publica directamente en una cola, sino en un
 \textit{exchange} \cite{rabbitmq2026amqp}. Para hacerlo mantiene una conexión
 TCP de larga duración \cite{rabbitmq2026connections} y, dentro de ella,
@@ -132,7 +155,7 @@ por un canal en un exchange. El exchange decide a qué colas va el mensaje
 según sus reglas, los bindings. La cola guarda los pedidos en orden y los
 trabajadores, que son los consumidores, los reciben y confirman.''
 
-\paragraph{Diapositiva 7. Diagrama propio: recorrido de un pedido.}
+\paragraph{Diapositiva 8. Diagrama propio: recorrido de un pedido.}
 La Figura~\ref{fig:arquitectura-rabbitmq} aplica la arquitectura a la tienda.
 La tienda, que es el productor, publica el pedido en el \textit{exchange}
 \texttt{pedidos}, de tipo \textit{direct}, con la clave
@@ -164,7 +187,7 @@ pedido pasa a otro. El broker funciona como un clúster de tres nodos.''
 
 \subsubsection*{Apartado 3. Transparencias de distribución}
 
-\paragraph{Diapositiva 8. Transparencias presentes en la arquitectura.}
+\paragraph{Diapositiva 9. Transparencias presentes en la arquitectura.}
 Un sistema distribuido intenta ocultar que sus procesos y recursos están
 repartidos entre varias máquinas \cite{vansteen2023distributed}. En el
 diagrama aparecen cinco transparencias. De acceso: la tienda y los
@@ -184,7 +207,7 @@ repartido. En nuestro diagrama la tienda no sabe qué trabajador ni qué nodo
 atiende el pedido, la cola replicada se ve como una sola, los trabajadores
 comparten la cola sin coordinarse y, si uno cae, su pedido pasa a otro.''
 
-\paragraph{Diapositiva 9. Limitaciones de esas transparencias.}
+\paragraph{Diapositiva 10. Limitaciones de esas transparencias.}
 La transparencia total no es alcanzable y tiene un costo en rendimiento
 \cite{vansteen2023distributed}. La reentrega no es invisible: el pedido llega
 marcado como \texttt{redelivered} y puede cambiar el orden

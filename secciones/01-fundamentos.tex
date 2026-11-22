@@ -104,3 +104,34 @@
   {\tiny Ejemplo ilustrativo: supone pedidos independientes y de igual
   duración; no considera el costo de coordinación.}
 \end{frame}
+
+\begin{frame}{Ejemplo: pedidos de distinta duración}
+  \small
+  P1 y P4 tardan \textbf{4 min}; P2, P3, P5 y P6, \textbf{1 min}.
+  Trabajo total: 12 min.\\[0.2cm]
+
+  \begin{tabularx}{\textwidth}{@{}p{3.7cm}XXXc@{}}
+    \toprule
+    \textbf{Reparto} & \textbf{T1} & \textbf{T2} & \textbf{T3} &
+      \textbf{Termina} \\
+    \midrule
+    \raggedright Un solo trabajador & \multicolumn{3}{l}{P1 a P6} & 12 min \\
+    \raggedright Por turnos (predeterminado) & P1, P4 (8) & P2, P5 (2) &
+      P3, P6 (2) & 8 min \\
+    \raggedright Al quedar libre (\texttt{prefetch} = 1) & P1 (4) &
+      P2, P4 (5) & P3, P5, P6 (3) & \textbf{5 min} \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{0.3cm}
+  \begin{block}{Qué muestra}
+    Tres trabajadores no bastan para terminar en un tercio del tiempo: importa
+    cómo se reparten los pedidos. Por defecto, RabbitMQ entrega por turnos sin
+    mirar cuánto trabajo tiene cada uno; con \texttt{prefetch} = 1 solo le
+    entrega otro pedido a un trabajador después de su \texttt{ack}
+    \cite{rabbitmq2026workqueues}.
+  \end{block}
+
+  {\tiny Ejemplo propio con duraciones supuestas; entre paréntesis, minutos
+  ocupados por cada trabajador. El mínimo posible sería 4 min.}
+\end{frame}
