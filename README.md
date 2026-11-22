@@ -69,4 +69,5 @@ pdflatex -interaction=nonstopmode -halt-on-error notas.tex
 ```
 ## Video del ensayo
 
-**Enlace:** Pendiente.
+**Enlace:**
+https://drive.google.com/drive/folders/19zjzoN_4WMlsvBQsWxvj4CusjlUrZKGT?usp=drive_link
