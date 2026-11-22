@@ -1,0 +1,109 @@
+
+\section{Modelos de comunicación}
+
+\begin{frame}{Comunicación entre procesos}
+  \begin{itemize}
+    \item Los procesos pueden intercambiar información para coordinar tareas dentro de un sistema distribuido \cite{kazanavicius2023}.
+    \item \textbf{Emisor:} es aquel proceso que envía información.
+    \item \textbf{Receptor:} es el proceso que recibe la información.
+    \item \textbf{Mensaje:} información transmitida entre procesos.
+    \item La comunicación puede ser \textbf{síncrona} o \textbf{asíncrona} \cite{kazanavicius2023}.
+  \end{itemize}
+
+  {\tiny Fuentes: \cite{kazanavicius2023,zhang2023}}
+\end{frame}
+
+\begin{frame}{Comunicación síncrona}
+  \begin{itemize}
+    \item El emisor ha realizado una solicitud y ahora está a la espera de una respuesta \cite{kazanavicius2023}.
+    \item El proceso dependiente no continúa hasta que reciba el resultado.
+    \item Podría provocar demoras si el receptor tarda mucho o no responde.
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{block}{Ejemplo}
+    Una tienda consulta si un pago fue aprobado y espera el resultado antes de confirmar la compra.
+  \end{block}
+
+  {\tiny Fuente: \cite{kazanavicius2023}}
+\end{frame}
+
+\begin{frame}{Comunicación asíncrona}
+  \begin{itemize}
+    \item El emisor envía un mensaje sin esperar el resultado de inmediato \cite{maharjan2023}.
+    \item El receptor puede procesar el mensaje posteriormente.
+    \item Este reduce la dependencia temporal entre los componentes \cite{kazanavicius2023}.
+    \item Las colas permiten gestionar mensajes pendientes de procesamiento \cite{derlatka2023}.
+  \end{itemize}
+
+  {\tiny Fuentes: \cite{maharjan2023,derlatka2023,kazanavicius2023}}
+\end{frame}
+
+\begin{frame}{Comunicación síncrona frente a asíncrona}
+  \small
+  \begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{lXX}
+      \toprule
+      \textbf{Aspecto} & \textbf{Síncrona} & \textbf{Asíncrona} \\
+      \midrule
+      Respuesta & Espera el resultado & No espera el resultado inmediato \\
+      Dependencia & Mayor dependencia temporal & Menor dependencia temporal \\
+      Ventaja & Permite decidir con la respuesta & Permite continuar otras tareas \\
+      Limitación & Puede generar esperas & Requiere gestionar mensajes \\
+      Ejemplo & Consulta de pago & Cola de pedidos \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{0.3cm}
+  {\tiny Fuentes: \cite{kazanavicius2023,maharjan2023,derlatka2023}}
+\end{frame}
+
+\begin{frame}{Hilos, concurrencia y paralelismo}
+  \begin{itemize}
+    \item \textbf{Hilo:} es la unidad de ejecución dentro de un proceso.
+    \item \textbf{Concurrencia:} dos o más hilos progresan durante un mismo período \cite{reinders2023}.
+    \item \textbf{Paralelismo:} dos o más hilos se ejecutan simultáneamente \cite{reinders2023}.
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{block}{Ejemplo}
+    Tres trabajadores procesan pedidos diferentes. Si alternan su ejecución, existe concurrencia; si trabajan al mismo tiempo, existe paralelismo.
+  \end{block}
+
+  {\tiny Fuente: \cite{reinders2023}, cap. 1, pp. 28--29.}
+\end{frame}
+
+
+\begin{frame}{Modelos de comunicación}
+  \begin{itemize}
+    \item \textbf{Cliente-servidor:} un cliente solicita un servicio y otro proceso lo atiende \cite{zhang2023}.
+    \item \textbf{Mensajería:} los procesos intercambian mensajes directamente o mediante intermediarios \cite{maharjan2023}.
+    \item \textbf{RPC:} un proceso solicita la ejecución de una operación en otro proceso \cite{zhang2023}.
+  \end{itemize}
+
+  \vspace{0.3cm}
+  \begin{block}{Aplicación en RabbitMQ}
+    RabbitMQ actúa como intermediario entre productores y consumidores. También admite patrones de petición-respuesta \cite{maharjan2023}.
+  \end{block}
+
+  {\tiny Fuentes: \cite{zhang2023,maharjan2023}}
+\end{frame}
+
+\begin{frame}{Procesamiento asíncrono con RabbitMQ}
+  \begin{enumerate}
+    \item Un cliente realiza un pedido.
+    \item La aplicación publica un mensaje en RabbitMQ.
+    \item El broker dirige el mensaje a una cola.
+    \item Un consumidor recibe y procesa el pedido.
+    \item Otros consumidores pueden procesar pedidos diferentes.
+  \end{enumerate}
+
+  \vspace{0.3cm}
+  \begin{block}{Ventaja}
+    La aplicación puede continuar atendiendo solicitudes mientras los trabajadores procesan los pedidos.
+  \end{block}
+
+  {\tiny Fuentes: \cite{maharjan2023,kazanavicius2023,derlatka2023}}
+\end{frame}
